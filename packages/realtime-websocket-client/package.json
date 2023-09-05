@@ -1,0 +1,39 @@
+{
+  "name": "@andipaetzold/realtime-websocket-client",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "sideEffects": false,
+  "type": "module",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andipaetzold/realtime.git",
+    "directory": "packages/realtime-websocket-client"
+  },
+  "author": {
+    "name": "Andi Pätzold",
+    "email": "github@andipaetzold.com",
+    "url": "https://github.com/andipaetzold"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andipaetzold/realtime/issues"
+  },
+  "homepage": "https://github.com/andipaetzold/realtime#readme",
+  "dependencies": {
+    "@andipaetzold/realtime-common": "^0.0.1",
+    "fast-json-patch": "^3.0.0",
+    "socket.io-client": "^4.6.0"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "1.0.2",
+    "typescript": "5.2.2"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}

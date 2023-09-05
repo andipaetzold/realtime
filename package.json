@@ -1,0 +1,15 @@
+{
+  "name": "@andipaetzold/realtime",
+  "description": "Simple (naive) realtime JSON \"database\"",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx nx run-many -t build",
+    "test": "npx nx run-many -t test"
+  },
+  "devDependencies": {
+    "nx": "16.7.4"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
