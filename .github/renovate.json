@@ -1,3 +1,9 @@
 {
-  "extends": ["config:js-lib", ":semanticCommitScopeDisabled"]
+  "extends": ["config:js-lib", ":semanticCommitScopeDisabled"],
+  "packageRules": [
+    {
+      "extends": ["config:js-app", ":semanticCommitScopeDisabled"],
+      "matchFileNames": ["packages/realtime-server-docker/package.json"]
+    }
+  ]
 }
