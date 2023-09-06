@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "npx nx run-many -t build",
-    "test": "npx nx run-many -t test"
+    "test": "npx nx run-many -t test",
+    "release": "npm run build && changeset publish"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.4.8",
