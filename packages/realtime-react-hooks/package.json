@@ -1,7 +1,7 @@
 {
   "name": "@andipaetzold/realtime-react-hooks",
   "version": "0.0.1",
-  "description": "",
+  "description": "React hooks for realtime JSON database",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "sideEffects": false,

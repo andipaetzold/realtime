@@ -2,7 +2,7 @@
   "name": "@andipaetzold/realtime-server-docker",
   "private": true,
   "version": "0.0.1",
-  "description": "",
+  "description": "Realtime JSON database server",
   "main": "dist/index.js",
   "sideEffects": false,
   "type": "module",

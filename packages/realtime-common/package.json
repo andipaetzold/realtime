@@ -1,7 +1,7 @@
 {
   "name": "@andipaetzold/realtime-common",
   "version": "0.0.1",
-  "description": "",
+  "description": "Internal shared package for realtime JSON database",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "sideEffects": false,

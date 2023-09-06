@@ -1,7 +1,7 @@
 {
   "name": "@andipaetzold/realtime-rest-client",
   "version": "0.0.1",
-  "description": "",
+  "description": "REST client for realtime JSON database",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "sideEffects": false,
