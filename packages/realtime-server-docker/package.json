@@ -1,0 +1,40 @@
+{
+  "name": "@andipaetzold/realtime-server-docker",
+  "private": true,
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "sideEffects": false,
+  "type": "module",
+  "engines": {
+    "node": "^18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andipaetzold/realtime.git",
+    "directory": "packages/realtime-server-docker"
+  },
+  "author": {
+    "name": "Andi Pätzold",
+    "email": "github@andipaetzold.com",
+    "url": "https://github.com/andipaetzold"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andipaetzold/realtime/issues"
+  },
+  "homepage": "https://github.com/andipaetzold/realtime#readme",
+  "dependencies": {
+    "@andipaetzold/realtime-server": "0.0.1"
+  },
+  "devDependencies": {
+    "@tsconfig/esm": "1.0.4",
+    "@tsconfig/node18": "18.2.1",
+    "@tsconfig/strictest": "2.0.2",
+    "typescript": "5.2.2"
+  },
+  "scripts": {
+    "start": "node .",
+    "build": "tsc"
+  }
+}

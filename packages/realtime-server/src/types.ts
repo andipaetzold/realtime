@@ -8,7 +8,6 @@ export interface Options {
   server: HttpServer | HttpsServer | Http2SecureServer;
   path?: string;
   initialData?: any;
-  token: string;
   logger?: Logger;
   auth?: Auth;
   cors?: {
