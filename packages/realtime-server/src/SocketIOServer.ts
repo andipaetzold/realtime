@@ -2,7 +2,7 @@ import {
   OPERATION_PATH_DATA_PREFIX,
   compressPatch,
 } from "@andipaetzold/realtime-common";
-import { compare } from "fast-json-patch";
+import pkg from "fast-json-patch";
 import { Server as IOServer } from "socket.io";
 import { QUERY_PREFIX } from "./constants.js";
 import { createSocketConnectionHandler } from "./handlers/index.js";
@@ -12,6 +12,8 @@ import type {
 } from "./internal-types.js";
 import type { Store } from "./types.js";
 import { getWithPath } from "./utils.js";
+
+const { compare } = pkg;
 
 export class SocketIOServer {
   #io: CustomSocketIOServer;
