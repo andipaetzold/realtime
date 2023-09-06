@@ -1,6 +1,6 @@
 {
   "name": "@andipaetzold/realtime-server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Realtime JSON database server",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

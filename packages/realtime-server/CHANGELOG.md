@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-server
 
+## 0.0.4
+
+### Patch Changes
+
+- [`4cc0411`](https://github.com/andipaetzold/realtime/commit/4cc04118d93a040719a715be4ef91f650cedc22d) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Create store using initial data
+
 ## 0.0.3
 
 ### Patch Changes
