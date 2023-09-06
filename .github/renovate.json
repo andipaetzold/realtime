@@ -3,7 +3,7 @@
   "packageRules": [
     {
       "extends": ["config:js-app", ":semanticCommitScopeDisabled"],
-      "matchFileNames": ["packages/realtime-server-docker/package.json"]
+      "matchFileNames": ["docker/package.json"]
     }
   ]
 }
