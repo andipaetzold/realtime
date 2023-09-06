@@ -39,6 +39,6 @@ USER nodejs
 EXPOSE 3000
 
 ENV PORT 3000
-ENV HOSTNAME localhost
+ENV REALTIME_DATA_DIR /var/lib/realtime
 
 CMD ["node", "dist/index.js"]
