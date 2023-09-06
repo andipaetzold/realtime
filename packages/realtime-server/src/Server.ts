@@ -9,13 +9,13 @@ export class Server {
   #store: Store;
 
   constructor(options: Options) {
-    const optionsWithDefaults: OptionsWithDefaults = structuredClone({
+    const optionsWithDefaults: OptionsWithDefaults = {
       server: options.server,
-      initialData: options.initialData ?? {},
+      initialData: structuredClone(options.initialData ?? {}),
       path: preparePath(options.path ?? ""),
       auth: options.auth ?? new PrivateAuth(),
-      cors: options.cors ?? { origin: "*" },
-    });
+      cors: structuredClone(options.cors ?? { origin: "*" }),
+    };
 
     this.#store = createStore(optionsWithDefaults);
 
