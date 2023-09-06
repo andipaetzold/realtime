@@ -5,7 +5,7 @@ FROM node:18-alpine AS base
 FROM base AS deps
 WORKDIR /app
 
-COPY --link .npmrc package.json package-lock.json ./
+COPY --link package.json package-lock.json ./
 
 RUN npm ci
 
