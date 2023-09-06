@@ -26,19 +26,13 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN \
-  addgroup --system --gid 1001 nodejs; \
-  adduser --system --uid 1001 nodejs
-
 COPY --link package.json ./
 COPY --from=deps --link /app/node_modules ./node_modules
-COPY --from=builder --link --chown=1001:1001 /app/dist ./dist
+COPY --from=builder --link /app/dist ./dist
 
-USER nodejs
-
-EXPOSE 3000
-
-ENV PORT 3000
+ENV PORT 8080
 ENV REALTIME_DATA_DIR /var/lib/realtime
+
+EXPOSE 8080
 
 CMD ["node", "dist/index.js"]
