@@ -8,7 +8,7 @@ interface Config {
 }
 
 const port = +(process.env["PORT"] ?? "");
-if (typeof port !== "number" || !Number.isNaN(port)) {
+if (typeof port !== "number" || Number.isNaN(port)) {
   throw new Error("Invalid port");
 }
 
