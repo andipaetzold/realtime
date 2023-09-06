@@ -17,7 +17,7 @@ export class Server {
       cors: structuredClone(options.cors ?? { origin: "*" }),
     };
 
-    this.#store = createStore(optionsWithDefaults);
+    this.#store = createStore(optionsWithDefaults.initialData);
 
     new ExpressServer(optionsWithDefaults, this.#store);
     new SocketIOServer(optionsWithDefaults, this.#store);
