@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-server
 
+## 0.0.3
+
+### Patch Changes
+
+- [`bd5f918`](https://github.com/andipaetzold/realtime/commit/bd5f9180034ba774a86c6bb46c52dea11badf2be) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Do not attempt to clone http server
+
 ## 0.0.2
 
 ### Patch Changes
