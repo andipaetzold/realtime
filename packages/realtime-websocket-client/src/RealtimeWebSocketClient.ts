@@ -53,8 +53,8 @@ export class RealtimeWebSocketClient {
 
   #handleConnect() {
     if (!this.#io.recovered) {
-      for (const path of this.#subscriptions.keys()) {
-        this.#io.emit("subscribeQuery", path);
+      for (const pathOrQuery of this.#subscriptions.keys()) {
+        this.#io.emit("subscribeQuery", pathOrQuery);
       }
     }
   }
@@ -94,36 +94,36 @@ export class RealtimeWebSocketClient {
     this.#emitData(path);
   }
 
-  subscribe<T>(path: string, listener: Listener<T>): () => void {
-    if (!this.#subscriptions.has(path)) {
-      this.#subscriptions.set(path, {
+  subscribe<T>(pathOrQuery: string, listener: Listener<T>): () => void {
+    if (!this.#subscriptions.has(pathOrQuery)) {
+      this.#subscriptions.set(pathOrQuery, {
         data: undefined,
         listeners: new Set<Listener<T>>(),
       });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const state = this.#subscriptions.get(path)!;
+    const state = this.#subscriptions.get(pathOrQuery)!;
     state.listeners.add(listener);
     if (state.data !== undefined) {
       listener(state.data);
     }
 
     this.#connectOrDisconnect();
-    this.#io.emit("subscribeQuery", path);
+    this.#io.emit("subscribeQuery", pathOrQuery);
 
-    return () => this.#unsubscribe(path, listener);
+    return () => this.#unsubscribe(pathOrQuery, listener);
   }
 
-  #unsubscribe<T>(path: string, listener: Listener<T>): void {
-    if (this.#subscriptions.has(path)) {
+  #unsubscribe<T>(pathOrQuery: string, listener: Listener<T>): void {
+    if (this.#subscriptions.has(pathOrQuery)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const state = this.#subscriptions.get(path)!;
+      const state = this.#subscriptions.get(pathOrQuery)!;
       state.listeners.delete(listener);
 
       if (state.listeners.size === 0) {
-        this.#io.emit("unsubscribeQuery", path);
-        this.#subscriptions.delete(path);
+        this.#io.emit("unsubscribeQuery", pathOrQuery);
+        this.#subscriptions.delete(pathOrQuery);
       }
     }
 
