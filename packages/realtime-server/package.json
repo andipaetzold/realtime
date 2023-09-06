@@ -61,7 +61,7 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.0",
-    "utf-8-validate": "^5.0.0"
+    "utf-8-validate": "^6.0.0"
   },
   "publishConfig": {
     "access": "public"
