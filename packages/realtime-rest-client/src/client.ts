@@ -13,10 +13,12 @@ export class RealtimeRESTClient {
     });
   }
 
-  async get<T = unknown>(path: string): Promise<T> {
+  async get<T = unknown>(path?: string): Promise<T> {
     return await this.#kyInstance
       .get("data", {
-        searchParams: { path },
+        searchParams: {
+          ...(path ? { path } : {}),
+        },
       })
       .json<T>();
   }

@@ -9,7 +9,7 @@ export function handleGETData(
   req: Request<ParamsDictionary, any, any, { path?: string }, { store: Store }>,
   res: Response
 ) {
-  const path = String(req.query.path ?? "/");
+  const path = String(req.query.path || "/");
   if (!path.startsWith("/")) {
     res.sendStatus(400);
     return;
