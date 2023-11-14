@@ -7,7 +7,7 @@
   "sideEffects": false,
   "type": "module",
   "engines": {
-    "node": "18.18.2"
+    "node": "20.9.0"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@tsconfig/esm": "1.0.4",
-    "@tsconfig/node18": "18.2.1",
+    "@tsconfig/node20": "20.1.2",
     "@tsconfig/strictest": "2.0.2",
     "typescript": "5.2.2"
   },
