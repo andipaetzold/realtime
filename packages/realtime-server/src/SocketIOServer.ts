@@ -20,7 +20,6 @@ export class SocketIOServer {
 
   constructor(options: OptionsWithDefaults, store: Store) {
     this.#io = new IOServer(options.server, {
-      // @ts-expect-error `cors` is missing in `SocketOption` ¯\_(ツ)_/¯
       cors: {
         origin: options.cors.origin,
         credentials: true,

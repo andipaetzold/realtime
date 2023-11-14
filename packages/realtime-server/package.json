@@ -41,7 +41,6 @@
     "socket.io": "^4.6.0"
   },
   "devDependencies": {
-    "@tsconfig/esm": "1.0.4",
     "@tsconfig/node18": "18.2.1",
     "@tsconfig/strictest": "2.0.2",
     "@types/bcrypt": "5.0.0",

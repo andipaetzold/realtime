@@ -3,8 +3,8 @@ import type { Server as HttpServer } from "http";
 import type { Http2SecureServer } from "http2";
 import type { Server as HttpsServer } from "https";
 import type { Server as SocketIOServer } from "socket.io";
-import type { Auth } from "./auth";
-import type { Logger } from "./types";
+import type { Auth } from "./auth/index.js";
+import type { Logger } from "./types.js";
 
 export interface OptionsWithDefaults {
   server: HttpServer | HttpsServer | Http2SecureServer;

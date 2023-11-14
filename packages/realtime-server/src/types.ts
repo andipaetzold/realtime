@@ -2,7 +2,7 @@ import type { Operation } from "fast-json-patch";
 import type { Server as HttpServer } from "http";
 import type { Http2SecureServer } from "http2";
 import type { Server as HttpsServer } from "https";
-import type { Auth } from "./auth";
+import type { Auth } from "./auth/index.js";
 
 export interface Options {
   server: HttpServer | HttpsServer | Http2SecureServer;

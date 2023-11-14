@@ -1,5 +1,5 @@
 {
-  "extends": ["@tsconfig/node18", "@tsconfig/strictest", "@tsconfig/esm"],
+  "extends": ["@tsconfig/node18", "@tsconfig/strictest"],
   "compilerOptions": {
     "declaration": true,
     "outDir": "lib"

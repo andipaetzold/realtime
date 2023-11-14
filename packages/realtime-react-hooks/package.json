@@ -29,7 +29,6 @@
     "socket.io-client": "^4.6.0"
   },
   "devDependencies": {
-    "@tsconfig/esm": "1.0.4",
     "@tsconfig/recommended": "1.0.2",
     "@tsconfig/strictest": "2.0.2",
     "@types/react": "18.2.21",
