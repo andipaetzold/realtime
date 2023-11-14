@@ -1,5 +1,15 @@
 # @andipaetzold/realtime-server
 
+## 0.0.5
+
+### Patch Changes
+
+- [`440a4f9`](https://github.com/andipaetzold/realtime/commit/440a4f9cd7c9eaeacd33844ae651efa4d3d95186) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Support Node 20
+
+- [#8](https://github.com/andipaetzold/realtime/pull/8) [`4a32678`](https://github.com/andipaetzold/realtime/commit/4a32678fd17e1913dffa87595a2b3e00ae1d79be) Thanks [@renovate](https://github.com/apps/renovate)! - Use `utf-8-validate` v6
+
+- [`03d11a2`](https://github.com/andipaetzold/realtime/commit/03d11a2ffe13d88c39ab7efe7ef8db1224fdfbf6) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Accepting empty `path` param for `GET /data`
+
 ## 0.0.4
 
 ### Patch Changes
