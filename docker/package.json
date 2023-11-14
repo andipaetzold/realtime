@@ -7,7 +7,7 @@
   "sideEffects": false,
   "type": "module",
   "engines": {
-    "node": "18.17.1"
+    "node": "18.18.2"
   },
   "repository": {
     "type": "git",
