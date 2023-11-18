@@ -28,7 +28,9 @@ export class SocketIOServer {
       path: `${options.path}/socket.io`,
     });
 
-    store.listen(this.#handleDataChange);
+    store.listen((oldData, newData) =>
+      this.#handleDataChange(oldData, newData)
+    );
 
     this.#io.on("connection", createSocketConnectionHandler(store));
   }
