@@ -1,6 +1,6 @@
 {
   "name": "@andipaetzold/realtime-server",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Realtime JSON database server",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/andipaetzold/realtime#readme",
   "dependencies": {
-    "@andipaetzold/realtime-common": "^0.0.1",
+    "@andipaetzold/realtime-common": "^0.0.2",
     "@types/node": "^18.0.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.0.0",
