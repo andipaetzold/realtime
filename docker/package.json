@@ -1,7 +1,7 @@
 {
   "name": "@andipaetzold/realtime-server-docker",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Realtime JSON database server",
   "main": "dist/index.js",
   "sideEffects": false,
