@@ -1,5 +1,14 @@
 # @andipaetzold/realtime-server
 
+## 0.0.6
+
+### Patch Changes
+
+- [`44261e8`](https://github.com/andipaetzold/realtime/commit/44261e83bac595c5f4b50a7beaaf3f8eedacc823) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Fix internal error that prevents changes to be pushed to websockets
+
+- Updated dependencies [[`2a988ef`](https://github.com/andipaetzold/realtime/commit/2a988ef1968586eee63195ed82f90a419902a06d)]:
+  - @andipaetzold/realtime-common@0.0.2
+
 ## 0.0.5
 
 ### Patch Changes

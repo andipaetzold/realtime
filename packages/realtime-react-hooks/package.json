@@ -1,6 +1,6 @@
 {
   "name": "@andipaetzold/realtime-react-hooks",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React hooks for realtime JSON database",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -37,7 +37,7 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "@andipaetzold/realtime-websocket-client": "^0.0.1"
+    "@andipaetzold/realtime-websocket-client": "^0.0.2"
   },
   "scripts": {
     "build": "tsc"
