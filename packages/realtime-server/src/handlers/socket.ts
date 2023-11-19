@@ -6,7 +6,7 @@ import type {
   SocketData,
 } from "../internal-types.js";
 import type { Logger, Store } from "../types.js";
-import { QUERY_PREFIX } from "../constants.js";
+import { rooms } from "../utils.js";
 
 export function createSocketConnectionHandler(store: Store, logger?: Logger) {
   return (
@@ -40,7 +40,7 @@ export function createSocketConnectionHandler(store: Store, logger?: Logger) {
       logger?.debug(`[${socket.id}] Subscribe`, { path });
 
       socket.emit("data", path, store.get(path));
-      socket.join(path);
+      socket.join(rooms.createPathRoom(path));
     });
 
     socket.on("subscribeQuery", async (query) => {
@@ -54,17 +54,17 @@ export function createSocketConnectionHandler(store: Store, logger?: Logger) {
           error,
         });
       }
-      socket.join(`${QUERY_PREFIX}${query}`);
+      socket.join(rooms.createQueryRoom(query));
     });
 
-    socket.on("unsubscribe", (query: string) => {
-      logger?.debug(`[${socket.id}] Unsubscribe`, { query });
-      socket.leave(query);
+    socket.on("unsubscribe", (path: string) => {
+      logger?.debug(`[${socket.id}] Unsubscribe`, { path });
+      socket.leave(rooms.createPathRoom(path));
     });
 
     socket.on("unsubscribeQuery", (query) => {
       logger?.debug(`[${socket.id}] Unsubscribe query`, { query });
-      socket.leave(`${QUERY_PREFIX}${query}`);
+      socket.leave(rooms.createQueryRoom(query));
     });
 
     socket.on("disconnect", () => {
