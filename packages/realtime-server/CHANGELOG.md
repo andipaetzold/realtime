@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-server
 
+## 0.0.7
+
+### Patch Changes
+
+- [`9c85ee9`](https://github.com/andipaetzold/realtime/commit/9c85ee956b0b1eb86a7381101ae75c9ed2b705f7) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Query subscriptions were handled as path subscriptions
+
 ## 0.0.6
 
 ### Patch Changes
