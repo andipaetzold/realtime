@@ -1,7 +1,7 @@
 {
   "name": "@andipaetzold/realtime-server-docker",
   "private": true,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Realtime JSON database server",
   "main": "dist/index.js",
   "sideEffects": false,
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/andipaetzold/realtime#readme",
   "dependencies": {
-    "@andipaetzold/realtime-server": "0.0.6"
+    "@andipaetzold/realtime-server": "0.0.8"
   },
   "devDependencies": {
     "@tsconfig/node20": "20.1.2",
