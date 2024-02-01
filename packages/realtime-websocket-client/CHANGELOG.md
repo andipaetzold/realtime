@@ -1,5 +1,14 @@
 # @andipaetzold/realtime-websocket-client
 
+## 0.0.4
+
+### Patch Changes
+
+- [`7bf20bd`](https://github.com/andipaetzold/realtime/commit/7bf20bdadfbb541e27a27014382b9403a34e351e) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Support path & query subscriptions via WebSocket
+
+- Updated dependencies [[`7bf20bd`](https://github.com/andipaetzold/realtime/commit/7bf20bdadfbb541e27a27014382b9403a34e351e)]:
+  - @andipaetzold/realtime-common@0.0.3
+
 ## 0.0.3
 
 ### Patch Changes
