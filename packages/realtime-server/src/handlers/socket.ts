@@ -1,10 +1,9 @@
-import { Socket } from "socket.io";
 import type {
   ClientToServerEvents,
-  InterServerEvents,
   ServerToClientEvents,
-  SocketData,
-} from "../internal-types.js";
+} from "@andipaetzold/realtime-common";
+import { Socket } from "socket.io";
+import type { InterServerEvents, SocketData } from "../internal-types.js";
 import type { Logger, Store } from "../types.js";
 import { rooms } from "../utils.js";
 
@@ -19,52 +18,51 @@ export function createSocketConnectionHandler(store: Store, logger?: Logger) {
   ) => {
     logger?.debug(`[${socket.id}] Socket connected`);
 
-    socket.on("data", (path, callback) => {
-      logger?.debug(`[${socket.id}] Data`, { path });
+    socket.on("get", async (params, callback) => {
+      logger?.debug(`[${socket.id}] Get`, { params });
 
-      callback(store.get(path));
-    });
+      switch (params.type) {
+        case "path":
+          callback(store.get(params.path));
+          break;
 
-    socket.on("query", async (query, callback) => {
-      logger?.debug(`[${socket.id}] Data`, { query });
-
-      try {
-        const result = await store.query(query);
-        callback(result);
-      } catch (error) {
-        logger?.error(`[${socket.id}] Error querying`, { query, error });
+        case "query":
+          try {
+            const result = await store.query(params.query);
+            callback(result);
+          } catch (error) {
+            logger?.error(`[${socket.id}] Error querying`, { params, error });
+          }
+          break;
       }
     });
 
-    socket.on("subscribe", (path) => {
-      logger?.debug(`[${socket.id}] Subscribe`, { path });
+    socket.on("subscribe", async (params) => {
+      logger?.debug(`[${socket.id}] Subscribe`, { params });
 
-      socket.emit("data", path, store.get(path));
-      socket.join(rooms.createPathRoom(path));
-    });
+      switch (params.type) {
+        case "path":
+          socket.emit("data", params, store.get(params.path));
+          break;
 
-    socket.on("subscribeQuery", async (query) => {
-      logger?.debug(`[${socket.id}] Subscribe query`, { query });
-
-      try {
-        socket.emit("dataQuery", query, await store.query(query));
-      } catch (error) {
-        logger?.error(`[${socket.id}] Error subscribing query`, {
-          query,
-          error,
-        });
+        case "query":
+          try {
+            socket.emit("data", params, await store.query(params.query));
+          } catch (error) {
+            logger?.error(`[${socket.id}] Error subscribing query`, {
+              params,
+              error,
+            });
+          }
+          break;
       }
-      socket.join(rooms.createQueryRoom(query));
+
+      socket.join(rooms.createRoom(params));
     });
 
-    socket.on("unsubscribe", (path: string) => {
-      logger?.debug(`[${socket.id}] Unsubscribe`, { path });
-      socket.leave(rooms.createPathRoom(path));
-    });
-
-    socket.on("unsubscribeQuery", (query) => {
-      logger?.debug(`[${socket.id}] Unsubscribe query`, { query });
-      socket.leave(rooms.createQueryRoom(query));
+    socket.on("unsubscribe", (params) => {
+      logger?.debug(`[${socket.id}] Unsubscribe`, { params });
+      socket.leave(rooms.createRoom(params));
     });
 
     socket.on("disconnect", () => {

@@ -1,3 +1,7 @@
+import type {
+  SubscriptionParamsPath,
+  SubscriptionParamsQuery,
+} from "@andipaetzold/realtime-common";
 import { Server as IOServer } from "socket.io";
 import { createSocketConnectionHandler } from "./handlers/index.js";
 import type {
@@ -33,46 +37,53 @@ export class SocketIOServer {
   }
 
   async #handleDataChange(oldData: any, newData: any) {
-    for (const [pathOrQuery, socketIds] of this.#io.sockets.adapter.rooms) {
+    for (const [room, socketIds] of this.#io.sockets.adapter.rooms) {
       if (socketIds.size === 0) {
         continue;
       }
 
-      if (rooms.isQueryRoom(pathOrQuery)) {
-        this.#handleDataChangeForPathQuery(pathOrQuery, oldData, newData);
-      } else {
-        this.#handleDataChangeForPathRoom(pathOrQuery, oldData, newData);
+      const params = rooms.getParams(room);
+      switch (params.type) {
+        case "path":
+          this.#handleDataChangeForPath(params, oldData, newData);
+          break;
+
+        case "query":
+          this.#handleDataChangeForQuery(params, oldData, newData);
+          break;
       }
     }
   }
 
-  async #handleDataChangeForPathQuery(
-    room: string,
+  #handleDataChangeForPath(
+    params: SubscriptionParamsPath,
+    oldData: any,
+    newData: any
+  ): void {
+    const oldValue = getWithPath(oldData, params.path);
+    const newValue = getWithPath(newData, params.path);
+
+    const patch = createCompressedPatch(oldValue, newValue);
+    if (patch.length === 0) {
+      return;
+    }
+
+    this.#io.to(rooms.createRoom(params)).emit("patch", params, patch);
+  }
+
+  async #handleDataChangeForQuery(
+    params: SubscriptionParamsQuery,
     oldData: any,
     newData: any
   ): Promise<void> {
-    const query = rooms.getQuery(room);
-    const oldValue = await getWithQuery(oldData, query);
-    const newValue = await getWithQuery(newData, query);
+    const oldValue = await getWithQuery(oldData, params.query);
+    const newValue = await getWithQuery(newData, params.query);
 
     const patch = createCompressedPatch(oldValue, newValue);
     if (patch.length === 0) {
       return;
     }
 
-    this.#io.to(room).emit("patchQuery", query, patch);
-  }
-
-  #handleDataChangeForPathRoom(room: string, oldData: any, newData: any): void {
-    const path = rooms.getPath(room);
-    const oldValue = getWithPath(oldData, path);
-    const newValue = getWithPath(newData, path);
-
-    const patch = createCompressedPatch(oldValue, newValue);
-    if (patch.length === 0) {
-      return;
-    }
-
-    this.#io.to(room).emit("patch", path, patch);
+    this.#io.to(rooms.createRoom(params)).emit("patch", params, patch);
   }
 }

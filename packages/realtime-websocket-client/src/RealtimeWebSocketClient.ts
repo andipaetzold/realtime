@@ -1,29 +1,23 @@
-import pkg from "fast-json-patch";
-import { io, Socket } from "socket.io-client";
 import {
-  type CompressedPatch,
-  decompressPatch,
   OPERATION_PATH_DATA_PREFIX,
+  decompressPatch,
+  type ClientToServerEvents,
+  type CompressedPatch,
+  type ServerToClientEvents,
+  type SubscriptionParams,
+  type SubscriptionParamsType,
 } from "@andipaetzold/realtime-common";
+import pkg from "fast-json-patch";
+import { Socket, io } from "socket.io-client";
 
 const { applyPatch } = pkg;
 
 type Listener<T> = (data: T) => void;
+type SubscriptionKey = `${"path" | "query"}:${string}`;
 
 interface SubscriptionState<T> {
   data: T | undefined;
   listeners: Set<Listener<T>>;
-}
-
-interface ServerToClientEvents {
-  dataQuery: (query: string, data: any) => void;
-  patchQuery: (query: string, operation: CompressedPatch) => void;
-}
-
-interface ClientToServerEvents {
-  subscribeQuery: (query: string) => void;
-  unsubscribeQuery: (query: string) => void;
-  query: (query: string, callback: (data: any) => void) => void;
 }
 
 export interface RealtimeWebSocketClientOptions {
@@ -35,7 +29,7 @@ export class RealtimeWebSocketClient {
   #io: Socket<ServerToClientEvents, ClientToServerEvents>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  #subscriptions = new Map<string, SubscriptionState<any>>();
+  #subscriptions = new Map<SubscriptionKey, SubscriptionState<any>>();
 
   public constructor({ url, onError }: RealtimeWebSocketClientOptions) {
     this.#io = io(url, {
@@ -43,8 +37,8 @@ export class RealtimeWebSocketClient {
     });
 
     this.#io.on("connect", this.#handleConnect.bind(this));
-    this.#io.on("dataQuery", this.#handleData.bind(this));
-    this.#io.on("patchQuery", this.#handlePatch.bind(this));
+    this.#io.on("data", this.#handleData.bind(this));
+    this.#io.on("patch", this.#handlePatch.bind(this));
 
     if (onError) {
       this.#io.on("connect_error", onError);
@@ -53,28 +47,32 @@ export class RealtimeWebSocketClient {
 
   #handleConnect() {
     if (!this.#io.recovered) {
-      for (const pathOrQuery of this.#subscriptions.keys()) {
-        this.#io.emit("subscribeQuery", pathOrQuery);
+      for (const subscriptionkey of this.#subscriptions.keys()) {
+        const params = splitSubscriptionKey(subscriptionkey);
+        this.#io.emit("subscribe", params);
       }
     }
   }
 
-  #handleData(path: string, data: unknown) {
-    if (!this.#subscriptions.has(path)) {
+  #handleData(params: SubscriptionParams, data: unknown) {
+    const subscriptionKey = getSubscriptionKey(params);
+    if (!this.#subscriptions.has(subscriptionKey)) {
       return;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.#subscriptions.get(path)!.data = data;
-    this.#emitData(path);
+    this.#subscriptions.get(subscriptionKey)!.data = data;
+    this.#emitData(subscriptionKey);
   }
 
-  #handlePatch(path: string, compressedPatch: CompressedPatch) {
-    if (!this.#subscriptions.has(path)) {
+  #handlePatch(params: SubscriptionParams, compressedPatch: CompressedPatch) {
+    const subscriptionKey = getSubscriptionKey(params);
+    if (!this.#subscriptions.has(subscriptionKey)) {
       return;
     }
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { data } = this.#subscriptions.get(path)!;
+    const { data } = this.#subscriptions.get(subscriptionKey)!;
     if (data === undefined) {
       return;
     }
@@ -90,52 +88,62 @@ export class RealtimeWebSocketClient {
     );
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.#subscriptions.get(path)!.data = newData;
-    this.#emitData(path);
+    this.#subscriptions.get(subscriptionKey)!.data = newData;
+    this.#emitData(subscriptionKey);
   }
 
-  subscribe<T>(pathOrQuery: string, listener: Listener<T>): () => void {
-    if (!this.#subscriptions.has(pathOrQuery)) {
-      this.#subscriptions.set(pathOrQuery, {
+  subscribeByPath<T>(path: string, listener: Listener<T>): () => void {
+    return this.#subscribe({ type: "path", path }, listener);
+  }
+
+  subscribeByQuery<T>(query: string, listener: Listener<T>): () => void {
+    return this.#subscribe({ type: "query", query }, listener);
+  }
+
+  #subscribe<T>(params: SubscriptionParams, listener: Listener<T>): () => void {
+    const subscriptionKey = getSubscriptionKey(params);
+    if (!this.#subscriptions.has(subscriptionKey)) {
+      this.#subscriptions.set(subscriptionKey, {
         data: undefined,
         listeners: new Set<Listener<T>>(),
       });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const state = this.#subscriptions.get(pathOrQuery)!;
+    const state = this.#subscriptions.get(subscriptionKey)!;
     state.listeners.add(listener);
     if (state.data !== undefined) {
       listener(state.data);
     }
 
     this.#connectOrDisconnect();
-    this.#io.emit("subscribeQuery", pathOrQuery);
+    this.#io.emit("subscribe", params);
 
-    return () => this.#unsubscribe(pathOrQuery, listener);
+    return () => this.#unsubscribe(params, listener);
   }
 
-  #unsubscribe<T>(pathOrQuery: string, listener: Listener<T>): void {
-    if (this.#subscriptions.has(pathOrQuery)) {
+  #unsubscribe<T>(params: SubscriptionParams, listener: Listener<T>): void {
+    const subscriptionKey = getSubscriptionKey(params);
+    if (this.#subscriptions.has(subscriptionKey)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const state = this.#subscriptions.get(pathOrQuery)!;
+      const state = this.#subscriptions.get(subscriptionKey)!;
       state.listeners.delete(listener);
 
       if (state.listeners.size === 0) {
-        this.#io.emit("unsubscribeQuery", pathOrQuery);
-        this.#subscriptions.delete(pathOrQuery);
+        this.#io.emit("unsubscribe", params);
+        this.#subscriptions.delete(subscriptionKey);
       }
     }
 
     this.#connectOrDisconnect();
   }
 
-  #emitData(path: string) {
-    if (!this.#subscriptions.has(path)) {
+  #emitData(subscriptionKey: SubscriptionKey) {
+    if (!this.#subscriptions.has(subscriptionKey)) {
       return;
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { data, listeners } = this.#subscriptions.get(path)!;
+    const { data, listeners } = this.#subscriptions.get(subscriptionKey)!;
     if (data === undefined) {
       return;
     }
@@ -158,5 +166,26 @@ export class RealtimeWebSocketClient {
       }
       this.#io.disconnect();
     }
+  }
+}
+
+function getSubscriptionKey(params: SubscriptionParams): SubscriptionKey {
+  switch (params.type) {
+    case "path":
+      return `${params.type}:${params.path}`;
+    case "query":
+      return `${params.type}:${params.query}`;
+  }
+}
+
+function splitSubscriptionKey(key: SubscriptionKey): SubscriptionParams {
+  const index = key.indexOf(":");
+  const type = key.slice(0, index) as SubscriptionParamsType;
+  const pathOrQuery = key.slice(index + 1);
+  switch (type) {
+    case "path":
+      return { type, path: pathOrQuery };
+    case "query":
+      return { type, query: pathOrQuery };
   }
 }

@@ -2,6 +2,8 @@ import {
   CompressedPatch,
   OPERATION_PATH_DATA_PREFIX,
   compressPatch,
+  SubscriptionParams,
+  SubscriptionParamsType,
 } from "@andipaetzold/realtime-common";
 import fastJsonPatch from "fast-json-patch";
 import { get } from "lodash-es";
@@ -33,14 +35,26 @@ export function pathToKey(path: string): string {
   );
 }
 
-const PATH_ROOM_PREFIX = "path:";
-const QUERY_ROOM_PREFIX = "query:";
 export const rooms = {
-  createPathRoom: (path: string) => `${PATH_ROOM_PREFIX}${path}`,
-  createQueryRoom: (query: string) => `${QUERY_ROOM_PREFIX}${query}`,
-  isQueryRoom: (room: string) => room.startsWith(QUERY_ROOM_PREFIX),
-  getPath: (room: string) => room.slice(PATH_ROOM_PREFIX.length),
-  getQuery: (room: string) => room.slice(QUERY_ROOM_PREFIX.length),
+  createRoom: (params: SubscriptionParams): string => {
+    switch (params.type) {
+      case "path":
+        return `${params.type}:${params.path}`;
+      case "query":
+        return `${params.type}:${params.query}`;
+    }
+  },
+  getParams: (room: string): SubscriptionParams => {
+    const index = room.indexOf(":");
+    const type = room.slice(0, index) as SubscriptionParamsType;
+    const pathOrQuery = room.slice(index + 1);
+    switch (type) {
+      case "path":
+        return { type, path: pathOrQuery };
+      case "query":
+        return { type, query: pathOrQuery };
+    }
+  },
 };
 
 export function createCompressedPatch(

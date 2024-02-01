@@ -3,7 +3,7 @@ import type { RealtimeWebSocketClient } from "@andipaetzold/realtime-websocket-c
 
 export function useRealtimeValue<T = unknown>(
   realtimeClient: RealtimeWebSocketClient,
-  path: string | undefined
+  pathOrQuery: string | undefined
 ): [T | null, false] | [undefined, true] {
   const { loading, setLoading, setValue, value } = useLoadingValue<T | null>();
 
@@ -14,13 +14,17 @@ export function useRealtimeValue<T = unknown>(
       setValue(newValue);
     };
 
-    if (path) {
-      return realtimeClient.subscribe<T>(path, listener);
-    } else {
+    if (!pathOrQuery) {
       setValue(null);
       return;
     }
-  }, [path, setLoading, setValue]);
+
+    if (pathOrQuery.startsWith("/")) {
+      return realtimeClient.subscribeByPath<T>(pathOrQuery, listener);
+    } else {
+      return realtimeClient.subscribeByQuery<T>(pathOrQuery, listener);
+    }
+  }, [pathOrQuery, setLoading, setValue]);
 
   return [value, loading] as [T | null, false] | [undefined, true];
 }
