@@ -44,7 +44,11 @@ export const rooms = {
         return `${params.type}:${params.query}`;
     }
   },
-  getParams: (room: string): SubscriptionParams => {
+  getParams: (room: string): SubscriptionParams | undefined => {
+    if (!room.includes(":")) {
+      return;
+    }
+
     const index = room.indexOf(":");
     const type = room.slice(0, index) as SubscriptionParamsType;
     const pathOrQuery = room.slice(index + 1);

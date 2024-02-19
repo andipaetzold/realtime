@@ -33,7 +33,10 @@ export class SocketIOServer {
       this.#handleDataChange(oldData, newData)
     );
 
-    this.#io.on("connection", createSocketConnectionHandler(store, options.logger));
+    this.#io.on(
+      "connection",
+      createSocketConnectionHandler(store, options.logger)
+    );
   }
 
   async #handleDataChange(oldData: any, newData: any) {
@@ -43,6 +46,9 @@ export class SocketIOServer {
       }
 
       const params = rooms.getParams(room);
+      if (!params) {
+        continue;
+      }
       switch (params.type) {
         case "path":
           this.#handleDataChangeForPath(params, oldData, newData);
