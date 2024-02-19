@@ -6,6 +6,7 @@ import { Socket } from "socket.io";
 import type { InterServerEvents, SocketData } from "../internal-types.js";
 import type { Logger, Store } from "../types.js";
 import { rooms } from "../utils.js";
+import { SubscriptionParamsRuntype } from "../validation.js";
 
 export function createSocketConnectionHandler(store: Store, logger?: Logger) {
   return (
@@ -20,6 +21,15 @@ export function createSocketConnectionHandler(store: Store, logger?: Logger) {
 
     socket.on("get", async (params, callback) => {
       logger?.debug(`[${socket.id}] Get`, { params });
+
+      const paramsValidationResult = SubscriptionParamsRuntype.validate(params);
+      if (!paramsValidationResult.success) {
+        logger?.error(`[${socket.id}] Invalid params`, {
+          params,
+          ...paramsValidationResult,
+        });
+        return;
+      }
 
       switch (params.type) {
         case "path":
@@ -39,6 +49,15 @@ export function createSocketConnectionHandler(store: Store, logger?: Logger) {
 
     socket.on("subscribe", async (params) => {
       logger?.debug(`[${socket.id}] Subscribe`, { params });
+
+      const paramsValidationResult = SubscriptionParamsRuntype.validate(params);
+      if (!paramsValidationResult.success) {
+        logger?.error(`[${socket.id}] Invalid params`, {
+          params,
+          ...paramsValidationResult,
+        });
+        return;
+      }
 
       switch (params.type) {
         case "path":
@@ -62,6 +81,16 @@ export function createSocketConnectionHandler(store: Store, logger?: Logger) {
 
     socket.on("unsubscribe", (params) => {
       logger?.debug(`[${socket.id}] Unsubscribe`, { params });
+
+      const paramsValidationResult = SubscriptionParamsRuntype.validate(params);
+      if (!paramsValidationResult.success) {
+        logger?.error(`[${socket.id}] Invalid params`, {
+          params,
+          ...paramsValidationResult,
+        });
+        return;
+      }
+
       socket.leave(rooms.createRoom(params));
     });
 
