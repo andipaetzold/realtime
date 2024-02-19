@@ -33,7 +33,7 @@ export class SocketIOServer {
       this.#handleDataChange(oldData, newData)
     );
 
-    this.#io.on("connection", createSocketConnectionHandler(store));
+    this.#io.on("connection", createSocketConnectionHandler(store, options.logger));
   }
 
   async #handleDataChange(oldData: any, newData: any) {
