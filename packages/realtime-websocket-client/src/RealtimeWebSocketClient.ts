@@ -1,19 +1,17 @@
 import {
   OPERATION_PATH_DATA_PREFIX,
   decompressPatch,
-  type ClientToServerEvents,
   type CompressedPatch,
-  type ServerToClientEvents,
   type SubscriptionParams,
-  type SubscriptionParamsType,
 } from "@andipaetzold/realtime-common";
 import pkg from "fast-json-patch";
-import { Socket, io } from "socket.io-client";
+import { SocketIOClient } from "./SocketIOClient.js";
+import { getSubscriptionKey, splitSubscriptionKey } from "./helpers.js";
 
 const { applyPatch } = pkg;
 
 type Listener<T> = (data: T) => void;
-type SubscriptionKey = `${"path" | "query"}:${string}`;
+export type SubscriptionKey = `${"path" | "query"}:${string}`;
 
 interface SubscriptionState<T> {
   data: T | undefined;
@@ -26,53 +24,51 @@ export interface RealtimeWebSocketClientOptions {
 }
 
 export class RealtimeWebSocketClient {
-  #io: Socket<ServerToClientEvents, ClientToServerEvents>;
+  #ioClient: SocketIOClient;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #subscriptions = new Map<SubscriptionKey, SubscriptionState<any>>();
 
-  public constructor({ url, onError }: RealtimeWebSocketClientOptions) {
-    this.#io = io(url, {
-      autoConnect: false,
-    });
+  constructor({ url, onError }: RealtimeWebSocketClientOptions) {
+    this.#ioClient = new SocketIOClient(url);
 
-    this.#io.on("connect", this.#handleConnect.bind(this));
-    this.#io.on("data", this.#handleData.bind(this));
-    this.#io.on("patch", this.#handlePatch.bind(this));
+    this.#ioClient.addConnectHandler(this.#handleConnect.bind(this));
+    this.#ioClient.addDataListener(this.#handleData.bind(this));
+    this.#ioClient.addPatchListener(this.#handlePatch.bind(this));
 
     if (onError) {
-      this.#io.on("connect_error", onError);
+      this.#ioClient.addErrorHandler(onError);
     }
   }
 
-  #handleConnect() {
-    if (!this.#io.recovered) {
+  #handleConnect(recovered: boolean) {
+    if (!recovered) {
       for (const subscriptionkey of this.#subscriptions.keys()) {
         const params = splitSubscriptionKey(subscriptionkey);
-        this.#io.emit("subscribe", params);
+        this.#ioClient.subscribe(params);
       }
     }
   }
 
   #handleData(params: SubscriptionParams, data: unknown) {
     const subscriptionKey = getSubscriptionKey(params);
-    if (!this.#subscriptions.has(subscriptionKey)) {
+    const state = this.#subscriptions.get(subscriptionKey);
+    if (!state) {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.#subscriptions.get(subscriptionKey)!.data = data;
+    state.data = data;
     this.#emitData(subscriptionKey);
   }
 
   #handlePatch(params: SubscriptionParams, compressedPatch: CompressedPatch) {
     const subscriptionKey = getSubscriptionKey(params);
-    if (!this.#subscriptions.has(subscriptionKey)) {
+    const state = this.#subscriptions.get(subscriptionKey);
+    if (!state) {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { data } = this.#subscriptions.get(subscriptionKey)!;
+    const { data } = state;
     if (data === undefined) {
       return;
     }
@@ -87,8 +83,7 @@ export class RealtimeWebSocketClient {
       false
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.#subscriptions.get(subscriptionKey)!.data = newData;
+    state.data = newData;
     this.#emitData(subscriptionKey);
   }
 
@@ -102,48 +97,53 @@ export class RealtimeWebSocketClient {
 
   #subscribe<T>(params: SubscriptionParams, listener: Listener<T>): () => void {
     const subscriptionKey = getSubscriptionKey(params);
-    if (!this.#subscriptions.has(subscriptionKey)) {
-      this.#subscriptions.set(subscriptionKey, {
+    const existingState: SubscriptionState<T> | undefined =
+      this.#subscriptions.get(subscriptionKey);
+    if (existingState) {
+      // add listener to existing subscription state
+      existingState.listeners.add(listener);
+      if (existingState.data !== undefined) {
+        listener(existingState.data);
+      }
+    } else {
+      // create new subscription
+      const newState: SubscriptionState<T> = {
         data: undefined,
-        listeners: new Set<Listener<T>>(),
-      });
-    }
+        listeners: new Set<Listener<T>>([listener]),
+      };
+      this.#subscriptions.set(subscriptionKey, newState);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const state = this.#subscriptions.get(subscriptionKey)!;
-    state.listeners.add(listener);
-    if (state.data !== undefined) {
-      listener(state.data);
+      this.#connectOrDisconnect();
+      this.#ioClient.subscribe(params);
     }
-
-    this.#connectOrDisconnect();
-    this.#io.emit("subscribe", params);
 
     return () => this.#unsubscribe(params, listener);
   }
 
   #unsubscribe<T>(params: SubscriptionParams, listener: Listener<T>): void {
     const subscriptionKey = getSubscriptionKey(params);
-    if (this.#subscriptions.has(subscriptionKey)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const state = this.#subscriptions.get(subscriptionKey)!;
-      state.listeners.delete(listener);
+    const state = this.#subscriptions.get(subscriptionKey);
+    if (!state) {
+      return;
+    }
 
-      if (state.listeners.size === 0) {
-        this.#io.emit("unsubscribe", params);
-        this.#subscriptions.delete(subscriptionKey);
-      }
+    state.listeners.delete(listener);
+
+    if (state.listeners.size === 0) {
+      this.#ioClient.unsubscribe(params);
+      this.#subscriptions.delete(subscriptionKey);
     }
 
     this.#connectOrDisconnect();
   }
 
   #emitData(subscriptionKey: SubscriptionKey) {
-    if (!this.#subscriptions.has(subscriptionKey)) {
+    const state = this.#subscriptions.get(subscriptionKey);
+    if (!state) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { data, listeners } = this.#subscriptions.get(subscriptionKey)!;
+
+    const { data, listeners } = state;
     if (data === undefined) {
       return;
     }
@@ -154,38 +154,12 @@ export class RealtimeWebSocketClient {
   }
 
   #connectOrDisconnect() {
+    // if the client is already connected/disconnected, nothing happens
+    // see https://github.com/socketio/socket.io-client/blob/8cfea8c30b113b0b6987976af9243cba6f537f30/lib/socket.ts#L331
     if (this.#subscriptions.size > 0) {
-      if (this.#io.connected) {
-        return;
-      }
-
-      this.#io.connect();
+      this.#ioClient.connect();
     } else {
-      if (this.#io.disconnected) {
-        return;
-      }
-      this.#io.disconnect();
+      this.#ioClient.disconnect();
     }
-  }
-}
-
-function getSubscriptionKey(params: SubscriptionParams): SubscriptionKey {
-  switch (params.type) {
-    case "path":
-      return `${params.type}:${params.path}`;
-    case "query":
-      return `${params.type}:${params.query}`;
-  }
-}
-
-function splitSubscriptionKey(key: SubscriptionKey): SubscriptionParams {
-  const index = key.indexOf(":");
-  const type = key.slice(0, index) as SubscriptionParamsType;
-  const pathOrQuery = key.slice(index + 1);
-  switch (type) {
-    case "path":
-      return { type, path: pathOrQuery };
-    case "query":
-      return { type, query: pathOrQuery };
   }
 }
