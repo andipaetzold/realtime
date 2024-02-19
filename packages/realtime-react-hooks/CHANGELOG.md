@@ -1,5 +1,12 @@
 # @andipaetzold/realtime-react-hooks
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`d147c93`](https://github.com/andipaetzold/realtime/commit/d147c93f175f5cc9005fb06de60ef8ed3c111c27)]:
+  - @andipaetzold/realtime-websocket-client@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes

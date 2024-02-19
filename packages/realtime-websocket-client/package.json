@@ -1,6 +1,6 @@
 {
   "name": "@andipaetzold/realtime-websocket-client",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "WebSocket client for realtime JSON database",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

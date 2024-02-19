@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-websocket-client
 
+## 0.0.5
+
+### Patch Changes
+
+- [`d147c93`](https://github.com/andipaetzold/realtime/commit/d147c93f175f5cc9005fb06de60ef8ed3c111c27) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Do not send request to server twice for same subscription
+
 ## 0.0.4
 
 ### Patch Changes
