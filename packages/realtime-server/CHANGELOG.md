@@ -1,5 +1,15 @@
 # @andipaetzold/realtime-server
 
+## 0.0.9
+
+### Patch Changes
+
+- [`38b2fab`](https://github.com/andipaetzold/realtime/commit/38b2fab09ff4035640ea9fa3e0cf3017a1cbd5b5) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Validate incoming socket.io requests
+
+- [`5f6e21f`](https://github.com/andipaetzold/realtime/commit/5f6e21f8ea5c13fd9ccac3fa89acea8968ce9d2d) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Handle socket.io default rooms
+
+- [`c19a226`](https://github.com/andipaetzold/realtime/commit/c19a22618aaecee0f36372a9cfcdb3471e17aaea) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Use logger passed in options
+
 ## 0.0.8
 
 ### Patch Changes
