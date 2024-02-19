@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@tsconfig/node18": "18.2.1",
-    "@tsconfig/strictest": "2.0.2",
+    "@tsconfig/strictest": "2.0.3",
     "@types/bcrypt": "5.0.0",
     "@types/chai": "4.3.6",
     "@types/cors": "2.8.14",
