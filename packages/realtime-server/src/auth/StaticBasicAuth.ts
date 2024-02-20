@@ -1,4 +1,3 @@
-import { compare } from "bcrypt";
 import { BasicAuth } from "./BasicAuth.js";
 
 export interface StaticBasicAuthOptions {
@@ -13,8 +12,8 @@ export class StaticBasicAuth extends BasicAuth {
 
     async function isValid(userIdToCheck: string, passwordToCheck: string) {
       for (const [userId, password] of Object.entries(credentials)) {
-        const validUserId = await compare(userIdToCheck, userId);
-        const validPassword = await compare(passwordToCheck, password);
+        const validUserId = userIdToCheck === userId;
+        const validPassword = passwordToCheck === password;
         if (validUserId && validPassword) {
           return true;
         }

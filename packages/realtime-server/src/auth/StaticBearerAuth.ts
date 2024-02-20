@@ -1,4 +1,3 @@
-import { compare } from "bcrypt";
 import { BearerAuth } from "./BearerAuth.js";
 
 export interface StaticBearerAuthOptions {
@@ -14,7 +13,6 @@ export class StaticBearerAuth extends BearerAuth {
 
     async function isValidToken(tokenToCheck: string) {
       for (const token of tokens) {
-        if (await compare(tokenToCheck, token)) {
           return true;
         }
       }
