@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-server
 
+## 0.0.10
+
+### Patch Changes
+
+- [`98c97ae`](https://github.com/andipaetzold/realtime/commit/98c97ae9a38840c561d45ecb498ccf19f1d1d914) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Drop bcrypt for performance. Now, tokens must be passed in plain text.
+
 ## 0.0.9
 
 ### Patch Changes
