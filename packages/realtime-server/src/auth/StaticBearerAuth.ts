@@ -13,6 +13,7 @@ export class StaticBearerAuth extends BearerAuth {
 
     async function isValidToken(tokenToCheck: string) {
       for (const token of tokens) {
+        if (token === tokenToCheck) {
           return true;
         }
       }
