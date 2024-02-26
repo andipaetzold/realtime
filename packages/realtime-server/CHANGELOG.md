@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-server
 
+## 0.0.11
+
+### Patch Changes
+
+- [`4c702df`](https://github.com/andipaetzold/realtime/commit/4c702dfaa61ad73c25065cf06e8961e3bbd76932) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Properly delete data
+
 ## 0.0.10
 
 ### Patch Changes
