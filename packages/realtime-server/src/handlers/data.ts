@@ -57,6 +57,6 @@ export function handleDELETEData(
     return;
   }
 
-  req.app.locals["store"].set(path, null);
+  req.app.locals["store"].delete(path)
   res.sendStatus(204);
 }

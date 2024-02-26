@@ -20,6 +20,7 @@ export interface Store {
   query<T = any>(query: string): Promise<T>;
   set(path: string, value: any): void;
   patch(patch: Operation[]): void;
+  delete(path: string): void;
   listen(listener: Listener): () => void;
 }
 

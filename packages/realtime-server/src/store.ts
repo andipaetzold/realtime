@@ -49,6 +49,31 @@ export function createStore(initialData: any): Store {
       );
       emitListeners(newData, data);
     },
+    delete: (path: string): void => {
+      const key = pathToKey(path);
+
+      if (key === "") {
+        throw new Error("Cannot delete root.");
+      }
+      const oldData = structuredClone(data);
+
+      const lastSlashIndex = path.lastIndexOf("/");
+      const parentPath = path.slice(0, lastSlashIndex);
+      const lastPath = path.slice(lastSlashIndex + 1);
+
+      const parent = getWithPath(data, parentPath);
+      if (Array.isArray(parent)) {
+        if (isNaN(Number(lastPath))) {
+          return;
+        }
+
+        parent.splice(Number(lastPath), 1);
+      } else {
+        delete parent[lastPath];
+      }
+
+      emitListeners(oldData, data);
+    },
     listen(listener: Listener): () => void {
       listeners.add(listener);
 
