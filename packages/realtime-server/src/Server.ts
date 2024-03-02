@@ -15,6 +15,9 @@ export class Server {
       path: preparePath(options.path ?? ""),
       auth: options.auth ?? new PrivateAuth(),
       cors: structuredClone(options.cors ?? { origin: "*" }),
+      adminUI: structuredClone(
+        options.adminUI ?? { enabled: false, auth: false }
+      ),
     };
 
     this.#store = createStore(optionsWithDefaults.initialData);

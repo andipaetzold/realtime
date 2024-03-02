@@ -13,6 +13,16 @@ export interface Options {
   cors?: {
     origin: string | string[];
   };
+  adminUI?: {
+    enabled: boolean;
+    auth:
+      | false
+      | {
+          type: "basic";
+          username: string;
+          password: string;
+        };
+  };
 }
 
 export interface Store {

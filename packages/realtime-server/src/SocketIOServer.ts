@@ -15,6 +15,7 @@ import {
   getWithQuery,
   rooms,
 } from "./utils.js";
+import { instrument } from "@socket.io/admin-ui";
 
 export class SocketIOServer {
   #io: CustomSocketIOServer;
@@ -28,6 +29,10 @@ export class SocketIOServer {
       serveClient: false,
       path: `${options.path}/socket.io`,
     });
+
+    if (options.adminUI.enabled) {
+      instrument(this.#io, { auth: options.adminUI.auth });
+    }
 
     store.listen((oldData, newData) =>
       this.#handleDataChange(oldData, newData)
