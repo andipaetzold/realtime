@@ -20,7 +20,7 @@ interface SubscriptionState<T> {
 
 export interface RealtimeWebSocketClientOptions {
   url: string;
-  onError?: (error: Error) => void;
+  onError?: ((error: Error) => void) | undefined;
 }
 
 export class RealtimeWebSocketClient {

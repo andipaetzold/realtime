@@ -6,7 +6,7 @@ export interface RealtimeRESTClientOptions {
   /**
    * Required for write operations
    */
-  token?: string;
+  token?: string | undefined;
 }
 
 export type Patch = Operation[];

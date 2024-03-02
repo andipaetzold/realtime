@@ -6,22 +6,26 @@ import type { Auth } from "./auth/index.js";
 
 export interface Options {
   server: HttpServer | HttpsServer | Http2SecureServer;
-  path?: string;
-  initialData?: any;
-  logger?: Logger;
-  auth?: Auth;
-  cors?: {
-    origin: string | string[];
-  };
-  adminUI?: {
-    enabled: boolean;
-    auth:
-      | false
-      | {
-          username: string;
-          password: string;
-        };
-  };
+  path?: string | undefined;
+  initialData?: any | undefined;
+  logger?: Logger | undefined;
+  auth?: Auth | undefined;
+  cors?:
+    | {
+        origin: string | string[];
+      }
+    | undefined;
+  adminUI?:
+    | {
+        enabled: boolean;
+        auth:
+          | false
+          | {
+              username: string;
+              password: string;
+            };
+      }
+    | undefined;
 }
 
 export interface Store {
