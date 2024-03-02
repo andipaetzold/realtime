@@ -32,7 +32,6 @@ const server = new Server({
         adminUI: {
           enabled: false,
           auth: {
-            type: "basic",
             username: config.adminUI.username,
             password: config.adminUI.password,
           },
