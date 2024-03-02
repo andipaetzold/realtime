@@ -31,7 +31,10 @@ export class SocketIOServer {
     });
 
     if (options.adminUI.enabled) {
-      instrument(this.#io, { auth: options.adminUI.auth });
+      instrument(this.#io, {
+        auth: options.adminUI.auth,
+        readonly: true,
+      });
     }
 
     store.listen((oldData, newData) =>
