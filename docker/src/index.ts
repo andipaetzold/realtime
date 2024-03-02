@@ -27,6 +27,18 @@ const server = new Server({
     debug: console.log,
   },
   initialData,
+  ...(config.adminUI
+    ? {
+        adminUI: {
+          enabled: false,
+          auth: {
+            type: "basic",
+            username: config.adminUI.username,
+            password: config.adminUI.password,
+          },
+        },
+      }
+    : {}),
 });
 
 const intervalHandle = setInterval(() => {

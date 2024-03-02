@@ -5,6 +5,12 @@ interface Config {
   dataFile: string;
   corsOrigin: string[];
   authToken: string | undefined;
+  adminUI:
+    | {
+        username: string;
+        password: string;
+      }
+    | undefined;
 }
 
 const port = +(process.env["PORT"] ?? "");
@@ -19,9 +25,16 @@ const dataFile = path.resolve(
 const corsOrigin = process.env["REALTIME_CORS_ORIGIN"]?.split(",") ?? [];
 const authToken = process.env["REALTIME_TOKEN"];
 
+const adminUIUsername = process.env["REALTIME_ADMIN_UI_USERNAME"];
+const adminUIPassword = process.env["REALTIME_ADMIN_UI_PASSWORD"];
+
 export const config: Config = {
   port,
   dataFile,
   corsOrigin,
   authToken,
+  adminUI:
+    adminUIUsername && adminUIPassword
+      ? { username: adminUIUsername, password: adminUIPassword }
+      : undefined,
 };

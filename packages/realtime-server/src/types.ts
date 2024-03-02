@@ -18,7 +18,6 @@ export interface Options {
     auth:
       | false
       | {
-          type: "basic";
           username: string;
           password: string;
         };

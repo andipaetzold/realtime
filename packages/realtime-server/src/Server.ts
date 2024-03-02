@@ -16,7 +16,18 @@ export class Server {
       auth: options.auth ?? new PrivateAuth(),
       cors: structuredClone(options.cors ?? { origin: "*" }),
       adminUI: structuredClone(
-        options.adminUI ?? { enabled: false, auth: false }
+        options.adminUI
+          ? {
+              enabled: true,
+              auth: options.adminUI.auth
+                ? {
+                    type: "basic",
+                    username: options.adminUI.auth.username,
+                    password: options.adminUI.auth.password,
+                  }
+                : false,
+            }
+          : { enabled: false, auth: false }
       ),
     };
 
