@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-server
 
+## 0.0.12
+
+### Patch Changes
+
+- [`39311d1`](https://github.com/andipaetzold/realtime/commit/39311d146c41108578e28699cd0df83464828de9) Thanks [@andipaetzold](https://github.com/andipaetzold)! - support Socket.IO Admin UI
+
 ## 0.0.11
 
 ### Patch Changes
