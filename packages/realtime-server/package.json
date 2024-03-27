@@ -30,7 +30,7 @@
   "dependencies": {
     "@andipaetzold/realtime-common": "^0.0.3",
     "@socket.io/admin-ui": "^0.5.1",
-    "@types/node": "^18.0.0",
+    "@types/node": "^20.0.0",
     "body-parser": "^1.0.0",
     "cors": "^2.0.0",
     "express": "^4.0.0",
