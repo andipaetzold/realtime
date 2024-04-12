@@ -62,6 +62,10 @@ export function createStore(initialData: any): Store {
       const lastPath = path.slice(lastSlashIndex + 1);
 
       const parent = getWithPath(data, parentPath);
+      if (typeof parent !== "object" || parent === null) {
+        return
+      }
+
       if (Array.isArray(parent)) {
         if (isNaN(Number(lastPath))) {
           return;
