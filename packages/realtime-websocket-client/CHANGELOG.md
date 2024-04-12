@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-websocket-client
 
+## 0.0.6
+
+### Patch Changes
+
+- [`76484a2`](https://github.com/andipaetzold/realtime/commit/76484a27b650c93e6259446c0276ceb3b0cb7e11) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Make types compatible with `exactOptionalPropertyTypes` TypeScript config
+
 ## 0.0.5
 
 ### Patch Changes

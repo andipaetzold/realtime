@@ -1,5 +1,15 @@
 # @andipaetzold/realtime-server
 
+## 0.0.14
+
+### Patch Changes
+
+- [`746b9c4`](https://github.com/andipaetzold/realtime/commit/746b9c489fd82d844ae2005471822f920a2c42dd) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Set Socket.IO Admin UI to readonly
+
+- [`70c5e08`](https://github.com/andipaetzold/realtime/commit/70c5e08c125c1d7075dc2e771369d9588090c0ff) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Handle deletions when the parent is not an object or null
+
+- [`76484a2`](https://github.com/andipaetzold/realtime/commit/76484a27b650c93e6259446c0276ceb3b0cb7e11) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Make types compatible with `exactOptionalPropertyTypes` TypeScript config
+
 ## 0.0.13
 
 ### Patch Changes
