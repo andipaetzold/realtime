@@ -30,7 +30,7 @@
     "socket.io-client": "^4.6.0"
   },
   "devDependencies": {
-    "@tsconfig/recommended": "1.0.3",
+    "@tsconfig/recommended": "1.0.6",
     "typescript": "5.3.3"
   },
   "scripts": {

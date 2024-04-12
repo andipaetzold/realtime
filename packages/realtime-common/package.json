@@ -28,7 +28,7 @@
     "fast-json-patch": "^3.0.0"
   },
   "devDependencies": {
-    "@tsconfig/recommended": "1.0.3",
+    "@tsconfig/recommended": "1.0.6",
     "@tsconfig/strictest": "2.0.3",
     "typescript": "5.3.3"
   },
