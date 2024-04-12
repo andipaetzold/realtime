@@ -28,7 +28,7 @@
     "@andipaetzold/realtime-server": "0.0.13"
   },
   "devDependencies": {
-    "@tsconfig/node20": "20.1.2",
+    "@tsconfig/node20": "20.1.4",
     "@tsconfig/strictest": "2.0.3",
     "typescript": "5.3.3"
   },
