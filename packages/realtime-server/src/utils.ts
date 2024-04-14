@@ -14,7 +14,7 @@ export function getWithPath(data: any, path: string) {
   if (key === "") {
     return data;
   } else {
-    return get(data, key);
+    return get(data, key, null);
   }
 }
 
