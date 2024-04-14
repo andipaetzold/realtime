@@ -1,5 +1,11 @@
 # @andipaetzold/realtime-server
 
+## 0.0.15
+
+### Patch Changes
+
+- [`d0b5008`](https://github.com/andipaetzold/realtime/commit/d0b50086bafb63e3c2c8f4dac7f83a51e3270ead) Thanks [@andipaetzold](https://github.com/andipaetzold)! - Return `null` if value of path-subscription is deleted
+
 ## 0.0.14
 
 ### Patch Changes
