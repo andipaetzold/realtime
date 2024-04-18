@@ -13,7 +13,7 @@ export interface OptionsWithDefaults {
   server: HttpServer | HttpsServer | Http2SecureServer;
   path: string;
   initialData: any;
-  logger?: Logger;
+  logger: Logger | undefined;
   auth: Auth;
   cors: {
     origin: string | string[];

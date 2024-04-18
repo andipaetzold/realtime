@@ -29,6 +29,7 @@ export class Server {
             }
           : { enabled: false, auth: false }
       ),
+      logger: options.logger,
     };
 
     this.#store = createStore(optionsWithDefaults.initialData);
